@@ -1,0 +1,223 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: monospace , sans-serif;
+    font-weight: normal;
+}
+
+body {
+    background:url(/images/รูปประกอบพื้นหลัง.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+header {
+    background: #ffffff;
+}
+
+nav{
+    position: relative;
+    display: flex;
+    width: 100%;
+    padding: 10px 0;
+    align-items: center;
+}
+
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+}
+
+.logo img{
+    display: block;
+    float: left;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.nav-head{
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    justify-content: space-between;
+    width: 100%;
+}
+.name {
+    font-size: 16px;
+    color: #5e5e5e;
+    font-weight: 600px;
+    text-decoration: underline;
+    text-decoration-color: #eb91e6;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+    margin: 10px auto;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.menu {
+    display: flex;
+    list-style: none;
+    text-align: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.menu li {
+    margin-left: 10px;
+    padding: 2px 20px;
+}
+
+.menu li a {
+    text-decoration: none;
+    color: #5e5e5e;
+    transition: color 0.3s ease;
+}
+
+.menu li a:hover {
+    color: #639ce6;
+}
+.toggle {
+    position: absolute;
+    top : 0%;
+    right: 20px;
+    color: #5e5e5e;
+    line-height: 60px;
+    font-size: 24px;
+    cursor: pointer;
+    display: none;
+}
+
+@media screen and (max-width: 640px) {
+    nav .header {display: block; align-items: center;}
+    nav .header .logo {display: block;  align-items: center;}
+    nav .header .nav-head {display: block;}
+    nav .header .nav-head .name {display: block;}
+    nav .header .nav-head .menu {display: block;}
+    .toggle {display: block;}
+}
+
+.box {
+    background:transparent;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin: 20px auto;
+    width: 90%;
+    padding: 10px;
+    flex:  1;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    height: 300px;
+    overflow-y: auto;       
+    overflow-x: hidden;     
+    border-bottom: 1px solid #ddd;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.webchat-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.webchat-input input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 18px;
+    border: none;
+    background: #e6e6e6;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.webchat-input input:focus {
+    outline: none;
+    background: #f2f2f2;
+}
+
+.webchat-input button {
+    padding: 10px 16px;
+    border-radius: 18px;
+    border: none;
+    background: #eb91e6;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.webchat-input button:hover {
+    background: #e46fde;
+}
+
+@media (max-width: 768px) {
+      .webchat-input input {
+        font-size: 0.85rem;
+      }
+      .webchat-input button {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+      }
+}
+
+.message {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 5px 0;
+}
+
+/* ข้อความฝั่งซ้าย (คู่สนทนา) */
+.message.left {
+  justify-content: flex-start;
+}
+
+/* ข้อความฝั่งขวา (เรา) */
+.message.right {
+  justify-content: flex-end;
+}
+
+/* กล่องข้อความ */
+.msg-bubble {
+  background: #f1f0f0;
+  color: #333;
+  padding: 10px 14px;
+  border-radius: 18px;
+  max-width: 70%;
+  word-wrap: break-word;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* กล่องข้อความฝั่งเรา */
+.msg-bubble.self {
+  background: #4a90e2;
+  color: white;
+}
+
+/* Avatar */
+.circle {
+  width: 28px;
+  height: 28px;
+  background: #000000;
+  border-radius: 50%;
+}
