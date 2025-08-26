@@ -1,0 +1,20 @@
+.container {
+    max-width: 80%;
+    height: 480px;
+    background-color: rgb(209, 236, 236);
+    display: block;
+    align-self: center;
+}
+.camera {
+    margin: 0 auto 20px auto;
+    display: block;
+    border-radius: 12px;
+  /* overflow: hidden; */
+  /* box-shadow: 0 4px 12px rgba(0,0,0,0.1); */
+  /* animation: fadeIn 0.5s etainase; */
+  /* border: 2px solid #639ce6; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* position: relative; */
+  /* transition: transform 0.3s ease; */
+}
