@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        #chat-box {
+            width: 90%; max-width: 500px;
+            height: 400px; overflow-y: auto;
+            border: 1px solid #ccc; margin: 20px auto;
+            padding: 10px; background: #fff;
+        }
+        #message {
+            width: 70%; padding: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background: #007bff; color: white;
+            border: none; cursor: pointer;
+        }
+    </style>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+    <h2 style="text-align:center;">💬 Flask Chat</h2>
+    <div id="chat-box"></div>
+    <div style="text-align:center;">
+        <input id="message" placeholder="Type message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        const socket = io();
+
+        const chatBox = document.getElementById("chat-box");
+        const messageInput = document.getElementById("message");
+
+        // Receive messages from server
+        socket.on("message", function(msg) {
+            let p = document.createElement("p");
+            p.textContent = msg;
+            chatBox.appendChild(p);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        // Send message
+        function sendMessage() {
+            const msg = messageInput.value;
+            if (msg.trim() !== "") {
+                socket.send(msg);
+                messageInput.value = "";
+            }
+        }
+
+        // Press Enter to send
+        messageInput.addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

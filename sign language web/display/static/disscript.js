@@ -24,6 +24,8 @@ function sendMessage() {
   // scroll ลงล่างอัตโนมัติ
   chatBox.scrollTop = chatBox.scrollHeight;
 
+  localStorage.setItem("chatMessage", JSON.stringify({ sender: "dischat", text: message }));
+  
   // reset input
   input.value = "";
   input.focus();
@@ -31,7 +33,7 @@ function sendMessage() {
 
 // ✅ รอ DOM โหลดเสร็จแล้วค่อย bind event
 document.addEventListener("DOMContentLoaded", () => {
-  initCamera();
+  // initCamera();
 
   const input = document.getElementById("input-text");
   const sendBtn = document.getElementById("sendBtn");

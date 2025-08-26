@@ -22,8 +22,8 @@ body {
 }
 
 .container {
-    max-width: 80%;
-    height: 100%;
+    max-width: 90%;
+    height: 80%;
     margin: 0 auto;
     display: block;
   }
@@ -34,8 +34,8 @@ body {
   padding: 20px;
   margin: 20px auto;
   width: 100%;
-  max-width: 600px;
-  height:40vh;
+  max-width: 700px;
+  height:45vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -148,15 +148,15 @@ body {
 }
 
 .camera {
-  width: 37%;
-  height: auto;
+  width: 65%;
+  height: 400px;
   aspect-ratio: 4 / 3;
   background: #000;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   margin: 0 auto 20px auto;
-  animation: fadeIn 0.5s ease;
+  animation: fadeIn 0.5s etainase;
   border: 2px solid #639ce6;
   display: flex;
   justify-content: center;
@@ -165,11 +165,11 @@ body {
   transition: transform 0.3s ease;
 }
 
-/* .camera video {
+.camera video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-} */
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
