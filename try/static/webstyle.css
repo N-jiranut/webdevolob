@@ -1,0 +1,87 @@
+.box {
+    background:transparent;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin: 20px auto;
+    width: 90%;
+    padding: 10px;
+    flex:  1;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    height: 300px;
+    overflow-y: auto;       
+    overflow-x: hidden;     
+    border-bottom: 1px solid #ddd;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.webchat-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.webchat-input input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 18px;
+    border: none;
+    background: #e6e6e6;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.webchat-input input:focus {
+    outline: none;
+    background: #aeebe2;
+}
+
+.webchat-input button {
+    padding: 10px 16px;
+    border-radius: 18px;
+    border: none;
+    background: #aeebe2;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.webchat-input button:hover {
+    background: #6fbfe4;
+}
+
+.message {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 5px 0;
+}
+
+/* ข้อความฝั่งซ้าย (คู่สนทนา) */
+.message.left {
+  justify-content: flex-start;
+}
+
+/* ข้อความฝั่งขวา (เรา) */
+.message.right {
+  justify-content: flex-end;
+}
+
+/* กล่องข้อความ */
+.msg-bubble {
+  background: #f1f0f0;
+  color: #333;
+  padding: 10px 14px;
+  border-radius: 18px;
+  max-width: 70%;
+  word-wrap: break-word;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}

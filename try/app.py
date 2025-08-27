@@ -1,5 +1,5 @@
 from flask import Flask, render_template, Response
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, send, emit
 import cv2
 
 app = Flask(__name__)
@@ -28,10 +28,11 @@ def video():
     return Response(generate_frames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@socketio.on('don')
-def handle_message(msg):
+@socketio.on('mainmessage')
+def handle_message(msg, user):
     print(msg)
-    send(msg, broadcast=True) 
+    print(user)
+    emit("take", (msg, user), broadcast=True) 
 
 if __name__ == "__main__":
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

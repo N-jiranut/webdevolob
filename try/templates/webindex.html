@@ -4,30 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Immediate Sign Language Translation Assistant for the Deaf</title>    
-  <link rel="stylesheet" href="webstyle.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='webstyle.css') }}">
   <link rel="style" href="FontAwesome6.2.0/css/all.min.css">
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body>
-  <header>
-    <nav>
-      <div class="container">
-        <div class="logo">
-          <img src="/images/suan-thon logo.png" alt="Logo">
-        </div>
-        <div class = "nav-head">
-          <div class="name">Immediate Sign Language Translation Assistant for the Deaf</div>
-          <ul class="menu">
-            <li><a href="about.html">About</a></li>
-            <li><a href="database.html">Database</a></li>
-            <li><a href="learning.html">Learning</a></li>
-          </ul>
-          <div class="toggle">
-          </div>
-        </div>
-      </div>
-    </nav>
-  </header>
-
+  
   <div class="box">
     <div class="webchat" id="webchat"></div>
       <div class="webchat-input">
@@ -35,16 +17,8 @@
         <button id="sendBtn">Send</button>
   </div>
 
-  <script src="jQuery/jquery-3.6.0.js"></script>
-  <script >
-    $(document).ready(function() {
-      $('.toggle').click(function() {
-        $('.toggle').toggleClass('active');
-        $('.ul').toggleClass('active');
-      });
-    });
-  </script>
-  <script src="webscript.js"></script>
+  <p id="fortest">no</p>
 
+  <script src="{{ url_for('static', filename='webscript.js') }}"></script>
 </body>
 </html>
