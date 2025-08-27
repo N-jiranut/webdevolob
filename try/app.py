@@ -19,10 +19,19 @@ def generate_frames():
 def index():
     return render_template('index.html')
 
+@app.route('/laptop')
+def laptop():
+    return render_template("webindex.html")
+
 @app.route('/video')
 def video():
     return Response(generate_frames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@socketio.on('don')
+def handle_message(msg):
+    print(msg)
+    send(msg, broadcast=True) 
 
 if __name__ == "__main__":
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

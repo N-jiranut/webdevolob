@@ -1,6 +1,6 @@
-.container {
+.chatbox {
     max-width: 80%;
-    height: 480px;
+    height: 200px;
     background-color: rgb(209, 236, 236);
     display: block;
     align-self: center;
