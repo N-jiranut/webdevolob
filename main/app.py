@@ -38,7 +38,7 @@ def generate_frames():
         frame = cv2.flip(frame, 1)
         img = cv2.cvtColor(frame,cv2.COLOR_RGB2BGR)
         if label !="":
-            cv2.putText(frame, label, (310, 240), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 2, cv2.LINE_AA)
+            cv2.putText(frame, label, (310, 240), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 2, cv2.LINE_AA)
         hand_result = hands.process(img)
         pose_results = pose.process(img)
         if hand_result.multi_hand_landmarks:
@@ -101,38 +101,43 @@ def video():
     return Response(generate_frames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@socketio.on('mainmessage')
-def handle_message(msg, user):
+@socketio.on('laptopmessage')
+def handle_message(msg):
     print(msg)
-    print(user)
-    emit("take", (msg, user), broadcast=True) 
+    emit("take", (msg, "laptop"), broadcast=True) 
+@socketio.on('dismessage')
+def handle_message():
+    global label
+    if label != "":
+        emit("take", (label, "ipad"), broadcast=True) 
+    label = ""
 
 @socketio.on('work')
 def startwork():
     global clientcsv, working, Finish, class_names, label
-    if not working and Finish:
+    if not working and Finish and label == "":
         working=True
         clientcsv=[]
-    elif working and Finish:
+    elif working and Finish and label == "":
         Finish=False
-        emit("redlight", True, broadcast=True)
+        emit("redlighton", broadcast=True)
         forpredict=[]
         maxarr=len(clientcsv)
-        # print(maxarr)
         con = math.floor(maxarr/15)
-        # print(con)
         for id, ob in enumerate(clientcsv):
             if id%con and len(forpredict)<1470:
-                # print(len(ob))
                 forpredict.extend(ob)
-        # df = pd.DataFrame(forpredict)
-        # df.to_csv("how.csv", mode='w', index=False, header=False)    
         pred = model.predict(np.array([forpredict]).reshape(1, -1))
         index = np.argmax(pred)
         label = class_names[index]
         working=False
         Finish=True
-        emit("redlight", False, broadcast=True)
+        emit("next", broadcast=True)
+        
+@socketio.on('fordelete')
+def deletelabel():
+    global label
+    label=""
 
 if __name__ == "__main__":
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

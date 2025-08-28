@@ -8,7 +8,7 @@ function sendMessage(){
     const text = input.value
     input.value = "";
     if (text.trim() !== "") {
-        socket.emit("mainmessage", text, "laptop");
+        socket.emit("laptopmessage", text);
     }
     input.focus();
 }
