@@ -1,15 +1,88 @@
 from flask import Flask, render_template, Response
 from flask_socketio import SocketIO, send, emit
-import cv2
+from tensorflow.keras.models import load_model
+import mediapipe as mp
+import numpy as np
+import pandas as pd
+import cv2, math
+
+hands = mp.solutions.hands.Hands()
+pose = mp.solutions.pose.Pose()
+name = "M8-21-2025-moving_hands_full"
+model = load_model(f"{name}/model.h5")
+with open(f"{name}/text.txt", "r") as f:
+    class_names = f.read().splitlines()
+pose_take = [0,11,12,13,14,15,16]
+
+working=False
+Finish=True
+collectpic=False
+clientcsv=[]
+label=""
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 cap = cv2.VideoCapture(0)
+
 def generate_frames():
+    global clientcsv, working, Finish, label
     while True:
+        row=[]
+        LH=[]
+        RH=[]
+        BO=[]
         ret, frame = cap.read()
+        frame = cv2.resize(frame, (720, 480))
+        frame = cv2.flip(frame, 1)
+        img = cv2.cvtColor(frame,cv2.COLOR_RGB2BGR)
+        if label !="":
+            cv2.putText(frame, label, (310, 240), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 2, cv2.LINE_AA)
+        hand_result = hands.process(img)
+        pose_results = pose.process(img)
+        if hand_result.multi_hand_landmarks:
+            for idx, hand_landmarks in enumerate(hand_result.multi_hand_landmarks):
+                arx, ary = [], []
+                handedness = hand_result.multi_handedness[idx].classification[0].label
+                for lm in hand_landmarks.landmark: 
+                    x, y= lm.x, lm.y    
+                    arx.append(x)
+                    ary.append(y)
+                    if handedness == "Left" and len(LH)<42:
+                        LH.extend([x,y])
+                    if handedness == "Right" and len(RH)<42:
+                        RH.extend([x,y])
+
+                mx = round(max(arx)*720)
+                lx = round(min(arx)*720)
+                my = round(max(ary)*480)
+                ly = round(min(ary)*480)
+
+                cv2.rectangle(frame, (lx,ly), (mx,my),(50,150,0), 2)
+                cv2.putText(frame, str(handedness), (lx, ly), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 2, cv2.LINE_AA)
+         
+        if pose_results.pose_landmarks:
+            landmarks = pose_results.pose_landmarks.landmark
+            for id,lm in enumerate(landmarks):
+                x, y = lm.x, lm.y
+                if id in pose_take:
+                    cv2.circle(frame ,(round(x*720),round(y*480)), 1, (0,0,255), 7)
+                    BO.extend([x, y])    
+                
+        if working and Finish and len(clientcsv)<200:
+            cv2.putText(frame, "o Rec", (30, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 2, cv2.LINE_AA)
+            if len(LH) <= 0:
+                LH = [0 for _ in range(42)]
+            row.extend(LH)
+            if len(RH) <= 0:
+                RH = [0 for _ in range(42)]
+            row.extend(RH)  
+            if len(BO) <= 0:
+                BO = [0 for _ in range(14)]      
+            row.extend(BO)
+            clientcsv.append(row)
+        
         ret, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
         yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
@@ -33,6 +106,33 @@ def handle_message(msg, user):
     print(msg)
     print(user)
     emit("take", (msg, user), broadcast=True) 
+
+@socketio.on('work')
+def startwork():
+    global clientcsv, working, Finish, class_names, label
+    if not working and Finish:
+        working=True
+        clientcsv=[]
+    elif working and Finish:
+        Finish=False
+        emit("redlight", True, broadcast=True)
+        forpredict=[]
+        maxarr=len(clientcsv)
+        # print(maxarr)
+        con = math.floor(maxarr/15)
+        # print(con)
+        for id, ob in enumerate(clientcsv):
+            if id%con and len(forpredict)<1470:
+                # print(len(ob))
+                forpredict.extend(ob)
+        # df = pd.DataFrame(forpredict)
+        # df.to_csv("how.csv", mode='w', index=False, header=False)    
+        pred = model.predict(np.array([forpredict]).reshape(1, -1))
+        index = np.argmax(pred)
+        label = class_names[index]
+        working=False
+        Finish=True
+        emit("redlight", False, broadcast=True)
 
 if __name__ == "__main__":
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

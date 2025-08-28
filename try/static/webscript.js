@@ -1,7 +1,8 @@
 const input = document.getElementById("input-text");
 const sendBtn = document.getElementById("sendBtn");
 const chatBox = document.getElementById("webchat");
-const socket = io('http://10.207.14.216:5000');
+// const socket = io('http://10.207.14.216:5000');
+const socket = io('http://192.168.1.115:5000');
 let side = "right";
 
 socket.on("take", function(msg, user) {

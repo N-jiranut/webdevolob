@@ -1,37 +1,15 @@
-// const input = document.getElementById("input-text");
 const sendBtn = document.getElementById("sendBtn");
 const chatBox = document.getElementById("webchat");
 const input = document.getElementById("input-text");
-const socket = io('http://10.207.14.216:5000');
-
-// function sendMessage() {
-//   const message = input.value.trim();
-//   if (message === "") return;
-
-//   // ✅ กล่องข้อความ (ฝั่งเรา)
-//   const msgDiv = document.createElement("div");
-//   msgDiv.classList.add("message", "right"); // right = ฝั่งเรา
-//   msgDiv.innerHTML = `
-//     <div class="msg-bubble self">${message}</div>
-//     <div class="circle"></div>
-//   `;
-//   chatBox.appendChild(msgDiv);
-
-//   // ✅ scroll ลงล่างอัตโนมัติ
-//   chatBox.scrollTop = chatBox.scrollHeight;
-
-//   // ✅ clear input
-//   input.value = "";
-//   input.focus();
-// }
+// const socket = io('http://10.207.14.216:5000');
+const socket = io('http://192.168.1.115:5000');
 
 function sendMessage(){
-    const text = document.getElementById("input-text").value
+    const text = input.value
+    input.value = "";
     if (text.trim() !== "") {
         socket.emit("mainmessage", text, "laptop");
     }
-    chatBox.scrollTop = chatBox.scrollHeight;
-    document.getElementById("input-text").value = "";
     input.focus();
 }
 socket.on("take", function(msg, user) {
@@ -41,6 +19,7 @@ socket.on("take", function(msg, user) {
   msgDiv.classList.add("message", side);
   msgDiv.innerHTML = `<div class="msg-bubble">${msg}</div>`;
   chatBox.appendChild(msgDiv);
+  chatBox.scrollTop = chatBox.scrollHeight;
 });
 
 // ปุ่ม Send
