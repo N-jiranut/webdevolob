@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Immediate Sign Language Translation Assistant for the Deaf</title> 
+  <link rel="stylesheet" href="{{ url_for('static', filename='disstyle.css') }}">
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <div class="header">Immediate Sign Language Translation Assistant for the Deaf</div>
+  <img class="camera" src="{{ url_for('video') }}" id="video" width="360" height="280">
+  <div class="container">
+    <div class="box">
+      <div class="dischat" id="dischat"></div>
+      <div class="dischat-input">
+        <input type="text" id="input-text" placeholder="Enter a message">
+        <button id="sendBtn">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='disscript.js') }}"></script>
+</body>
+</html>
