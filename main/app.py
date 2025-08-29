@@ -19,6 +19,7 @@ Finish=True
 collectpic=False
 clientcsv=[]
 label=""
+npic=0
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -27,7 +28,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 cap = cv2.VideoCapture(0)
 
 def generate_frames():
-    global clientcsv, working, Finish, label
+    global clientcsv, working, Finish, label, npic
     while True:
         row=[]
         LH=[]
@@ -71,7 +72,8 @@ def generate_frames():
                     BO.extend([x, y])    
                 
         if working and Finish and len(clientcsv)<200:
-            cv2.putText(frame, "o Rec", (30, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 2, cv2.LINE_AA)
+            cv2.putText(frame, f"Get: {npic}/200", (50, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 2, cv2.LINE_AA)
+            npic+=1
             if len(LH) <= 0:
                 LH = [0 for _ in range(42)]
             row.extend(LH)
@@ -92,33 +94,39 @@ def generate_frames():
 def index():
     return render_template('displayindex.html')
 
-@app.route('/laptop')
-def laptop():
+@app.route('/laptop') 
+def laptop(): 
     return render_template("webindex.html")
 
-@app.route('/video')
-def video():
+@app.route('/video')  
+def video(): 
     return Response(generate_frames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @socketio.on('laptopmessage')
 def handle_message(msg):
-    print(msg)
+    print(msg) 
     emit("take", (msg, "laptop"), broadcast=True) 
+
 @socketio.on('dismessage')
-def handle_message():
+def handle_message(currenttext):
     global label
     if label != "":
-        emit("take", (label, "ipad"), broadcast=True) 
-    label = ""
+        emit("add_text", label, broadcast=True)
+        label = ""
+    elif label == "" and currenttext != "":
+        print("")
+        emit("take", (currenttext, "ipad"), broadcast=True) 
 
 @socketio.on('work')
 def startwork():
-    global clientcsv, working, Finish, class_names, label
+    global clientcsv, working, Finish, class_names, label, npic
+    print("on")
     if not working and Finish and label == "":
         working=True
         clientcsv=[]
-    elif working and Finish and label == "":
+    elif working and Finish and label == "" and npic>=30:
+        npic=0
         Finish=False
         emit("redlighton", broadcast=True)
         forpredict=[]

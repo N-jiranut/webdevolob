@@ -1,7 +1,8 @@
-// const socket = io('http://10.207.14.216:5000');
-const socket = io('http://192.168.1.115:5000');
-const chatBox = document.getElementById("dischat");
+const socket = io('http://10.207.14.216:5000');
+// const socket = io('http://192.168.1.115:5000');
 
+const chatBox = document.getElementById("dischat");
+const input = document.getElementById("input-text")
 const workbtn = document.getElementById("onworkBtn");
 const delbtn = document.getElementById("delBtn");
 const greenbtn = document.getElementById("green");
@@ -9,10 +10,16 @@ const greenbtn = document.getElementById("green");
 const redbtn = document.getElementById("red");
 function sendMessage(){
   greenbtn.style.backgroundColor = "rgba(20, 129, 16, 1)";
-    socket.emit("dismessage");
+  socket.emit("dismessage", input.value);
 }
 
+socket.on("add_text", function(label){
+  let newtext = input.value + label
+  input.value = newtext;
+});
+
 socket.on("take", function(msg, user) {
+  input.value=""
   if (user=="laptop"){side="right";}else{side="left";}
 
   const msgDiv = document.createElement("div");

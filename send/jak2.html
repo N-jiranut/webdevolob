@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo Webpage from Video</title>
+  <meta name="description" content="A responsive, accessible landing page reconstructed from a reference video." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
+  <meta property="og:title" content="Demo Webpage from Video" />
+  <meta property="og:description" content="Responsive UI with animations, slider, and contact form." />
+  <meta property="og:type" content="website" />
+  <link rel="preload" href="jak2.css" as="style" />
+  <link rel="stylesheet" href="jak2.css" />
+  <script defer src="jak2.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">ข้ามไปยังเนื้อหา</a>
+  <header class="site-header" role="banner">
+    <div class="container nav">
+      <a class="brand" href="#" aria-label="Homepage">BrandName</a>
+      <button id="themeToggle" class="icon-btn" aria-label="Toggle color theme" title="Toggle theme">🌓</button>
+      <button id="menuBtn" class="icon-btn" aria-expanded="false" aria-controls="primaryNav" aria-label="เปิดเมนู">☰</button>
+      <nav id="primaryNav" class="nav-links" role="navigation">
+        <a href="#hero">Home</a>
+        <a href="#features">Features</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#testimonials">Reviews</a>
+        <a href="#contact" class="btn btn--small">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section id="hero" class="section hero container">
+      <div class="hero__text">
+        <h1 data-animate="fade-up">สร้างหน้าเว็บเหมือนในวิดีโอ</h1>
+        <p class="muted" data-animate="fade-up" data-delay="100">
+          เลย์เอาต์ที่ตอบสนองทุกหน้าจอ พร้อมแอนิเมชันเบา ๆ เมนูมือถือ สไลด์ และฟอร์มติดต่อ
+        </p>
+        <div class="hero__cta" data-animate="fade-up" data-delay="150">
+          <a href="#features" class="btn">ดูฟีเจอร์</a>
+          <a href="#contact" class="btn btn--ghost">เริ่มต้น</a>
+        </div>
+      </div>
+      <figure class="hero__media" data-animate="fade-in" aria-label="Preview image">
+        <img src="https://picsum.photos/seed/hero/960/640" alt="UI preview" loading="lazy" width="960" height="640">
+      </figure>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="section container">
+      <header class="section__header">
+        <h2 data-animate="fade-up">ฟีเจอร์เด่น</h2>
+        <p class="muted" data-animate="fade-up" data-delay="100">สิ่งที่มักพบในหน้าแลนดิ้งสมัยใหม่</p>
+      </header>
+      <div class="grid grid--3">
+        <article class="card" data-animate="rise">
+          <h3>Responsive</h3>
+          <p class="muted">ใช้ CSS Grid/Flex ปรับเลย์เอาต์ตามขนาดหน้าจอ</p>
+        </article>
+        <article class="card" data-animate="rise" data-delay="50">
+          <h3>Accessible</h3>
+          <p class="muted">รองรับแป้นพิมพ์/สกรีนรีดเดอร์ มี skip link และ ARIA</p>
+        </article>
+        <article class="card" data-animate="rise" data-delay="100">
+          <h3>Animations</h3>
+          <p class="muted">แอนิเมชันค่อย ๆ โผล่ด้วย IntersectionObserver</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- GALLERY / SLIDER -->
+    <section id="gallery" class="section section--alt">
+      <div class="container">
+        <header class="section__header">
+          <h2 data-animate="fade-up">แกลเลอรี</h2>
+          <p class="muted" data-animate="fade-up" data-delay="100">สไลด์ภาพแบบเรียบง่าย</p>
+        </header>
+
+        <div class="slider" data-animate="fade-in">
+          <button class="slider__btn slider__btn--prev" aria-label="Previous slide">‹</button>
+          <div class="slider__track" id="sliderTrack" aria-roledescription="carousel" aria-label="Gallery">
+            <div class="slide"><img src="https://picsum.photos/seed/1/800/480" alt="Gallery 1" loading="lazy" ></div>
+            <div class="slide"><img src="https://picsum.photos/seed/2/800/480" alt="Gallery 2" loading="lazy" ></div>
+            <div class="slide"><img src="https://picsum.photos/seed/3/800/480" alt="Gallery 3" loading="lazy" ></div>
+            <div class="slide"><img src="https://picsum.photos/seed/4/800/480" alt="Gallery 4" loading="lazy" ></div>
+          </div>
+          <button class="slider__btn slider__btn--next" aria-label="Next slide">›</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="section container">
+      <header class="section__header">
+        <h2 data-animate="fade-up">ราคา</h2>
+        <p class="muted" data-animate="fade-up" data-delay="100">แผนราคาตัวอย่าง</p>
+      </header>
+      <div class="grid grid--3">
+        <article class="card price" data-animate="rise">
+          <h3>Starter</h3>
+          <div class="price__value">฿0</div>
+          <ul class="price__list">
+            <li>1 หน้า</li><li>อัปเดตพื้นฐาน</li><li>อีเมลซัพพอร์ต</li>
+          </ul>
+          <button class="btn btn--block">เลือกแผน</button>
+        </article>
+        <article class="card price price--popular" data-animate="rise" data-delay="50" aria-label="Most popular plan">
+          <div class="badge">Popular</div>
+          <h3>Pro</h3>
+          <div class="price__value">฿990</div>
+          <ul class="price__list">
+            <li>5 หน้า</li><li>ส่วนติดต่อฐานข้อมูล</li><li>ซัพพอร์ตด่วน</li>
+          </ul>
+          <button class="btn btn--block">เลือกแผน</button>
+        </article>
+        <article class="card price" data-animate="rise" data-delay="100">
+          <h3>Enterprise</h3>
+          <div class="price__value">฿4,900</div>
+          <ul class="price__list">
+            <li>กำหนดเอง</li><li>CI/CD</li><li>ที่ปรึกษาเฉพาะทาง</li>
+          </ul>
+          <button class="btn btn--block">ติดต่อเรา</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="section section--alt">
+      <div class="container">
+        <header class="section__header">
+          <h2 data-animate="fade-up">รีวิวผู้ใช้</h2>
+          <p class="muted" data-animate="fade-up" data-delay="100">เสียงจากผู้ใช้งานจริง</p>
+        </header>
+
+        <div class="testimonials" data-animate="fade-in">
+          <blockquote class="quote">
+            <p>“หน้าสวย ลื่นไหล ทำงานไวมาก”</p>
+            <footer>— Pijak, นักเรียน/ผู้พัฒนา</footer>
+          </blockquote>
+          <blockquote class="quote">
+            <p>“โค้ดอ่านง่าย ปรับแต่งสะดวกมาก ๆ”</p>
+            <footer>— Project Judge</footer>
+          </blockquote>
+          <blockquote class="quote">
+            <p>“ชอบโหมดมืดและสว่าง กำลังดีต่อสายตา”</p>
+            <footer>— Teacher</footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section container">
+      <header class="section__header">
+        <h2 data-animate="fade-up">ติดต่อเรา</h2>
+        <p class="muted" data-animate="fade-up" data-delay="100">ส่งข้อความถึงเรา (เดโม่ต่อ API Java ได้)</p>
+      </header>
+      <form id="contactForm" class="form card" novalidate>
+        <div class="form__grid">
+          <label>ชื่อ
+            <input type="text" name="name" placeholder="ชื่อของคุณ" required>
+          </label>
+          <label>อีเมล
+            <input type="email" name="email" placeholder="you@example.com" required>
+          </label>
+        </div>
+        <label>ข้อความ
+          <textarea name="message" rows="5" placeholder="ฉันต้องการ..." required></textarea>
+        </label>
+        <div class="form__actions">
+          <button class="btn" type="submit">ส่งข้อความ</button>
+          <span id="formStatus" class="muted" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer">
+      <small>© <span id="year"></span> BrandName — Built with HTML • CSS • JS</small>
+      <a href="#hero" class="to-top" aria-label="กลับขึ้นด้านบน">↑</a>
+    </div>
+  </footer>
+</body>
+</html>
