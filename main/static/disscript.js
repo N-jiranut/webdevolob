@@ -1,5 +1,5 @@
-// const socket = io('http://10.207.14.216:5000');
-const socket = io('http://192.168.1.115:5000');
+const socket = io('http://10.207.14.216:5000');
+// const socket = io('http://192.168.1.115:5000');
 
 const chatBox = document.getElementById("dischat");
 const input = document.getElementById("input-text")
@@ -14,7 +14,7 @@ function sendMessage(){
 }
 
 socket.on("add_text", function(label){
-  let newtext = input.value + label
+  let newtext = input.value + " " + label
   input.value = newtext;
 });
 
@@ -36,7 +36,7 @@ socket.on("next", function(){
   redbtn.style.backgroundColor = "rgba(100, 10, 10, 1)";
   greenbtn.style.backgroundColor = "rgba(47, 255, 40, 1)";
 });
-socket.on("add_text", function(){
+socket.on("addonbtn", function(){
   sendMessage()
 });
 

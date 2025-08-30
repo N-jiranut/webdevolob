@@ -27,6 +27,29 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 cap = cv2.VideoCapture(0)
 
+# def startwork():
+#     global clientcsv, working, Finish, class_names, label, npic
+#     print("on")
+#     if not working and Finish and label == "":
+#         working=True
+#         clientcsv=[]
+#     elif working and Finish and label == "" and npic>=30:
+#         npic=0
+#         Finish=False
+#         emit("redlighton", broadcast=True)
+#         forpredict=[]
+#         maxarr=len(clientcsv)
+#         con = math.floor(maxarr/15)
+#         for id, ob in enumerate(clientcsv):
+#             if id%con and len(forpredict)<1470:
+#                 forpredict.extend(ob)
+#         pred = model.predict(np.array([forpredict]).reshape(1, -1))
+#         index = np.argmax(pred)
+#         label = class_names[index]
+#         working=False
+#         Finish=True
+#         emit("next", broadcast=True)
+
 def generate_frames():
     global clientcsv, working, Finish, label, npic
     while True:
@@ -111,14 +134,31 @@ def handle_message(msg):
 @socketio.on('dismessage')
 def handle_message(currenttext):
     global label
-    if label != "":
+    print(label,"<==")
+    if label == "" and currenttext != "":
+        emit("take", (currenttext, "ipad"), broadcast=True) 
+    elif label != "":
         emit("add_text", label, broadcast=True)
         label = ""
-    elif label == "" and currenttext != "":
-        print("")
-        emit("take", (currenttext, "ipad"), broadcast=True) 
 
 @socketio.on('work')
+def newwork():
+    pass
+        
+@socketio.on('fordelete')
+def deletelabel():
+    global label
+    label=""
+    
+@app.route('/send', methods=['POST'])
+def addonsend():
+    socketio.emit("addonbtn")
+    return "ok"
+@app.route('/cancel', methods=['POST'])
+def addoncancel():
+    deletelabel()
+    return "ok"
+@app.route('/start', methods=['POST'])
 def startwork():
     global clientcsv, working, Finish, class_names, label, npic
     print("on")
@@ -128,7 +168,7 @@ def startwork():
     elif working and Finish and label == "" and npic>=30:
         npic=0
         Finish=False
-        emit("redlighton", broadcast=True)
+        socketio.emit("redlighton")
         forpredict=[]
         maxarr=len(clientcsv)
         con = math.floor(maxarr/15)
@@ -140,24 +180,7 @@ def startwork():
         label = class_names[index]
         working=False
         Finish=True
-        emit("next", broadcast=True)
-        
-@socketio.on('fordelete')
-def deletelabel():
-    global label
-    label=""
-    
-@app.route('/send', methods=['POST'])
-def addonsend():
-    emit("addonbtn", broadcast=True)
-    return "ok"
-@app.route('/cancel', methods=['POST'])
-def addoncancel():
-    deletelabel()
-    return "ok"
-@app.route('/start', methods=['POST'])
-def addonstart():
-    startwork()
+        socketio.emit("next")
     return "ok"
 
 
