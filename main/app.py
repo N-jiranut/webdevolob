@@ -146,6 +146,20 @@ def startwork():
 def deletelabel():
     global label
     label=""
+    
+@app.route('/send', methods=['POST'])
+def addonsend():
+    emit("addonbtn", broadcast=True)
+    return "ok"
+@app.route('/cancel', methods=['POST'])
+def addoncancel():
+    deletelabel()
+    return "ok"
+@app.route('/start', methods=['POST'])
+def addonstart():
+    startwork()
+    return "ok"
+
 
 if __name__ == "__main__":
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
