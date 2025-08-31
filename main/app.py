@@ -8,7 +8,7 @@ import cv2, math
 
 hands = mp.solutions.hands.Hands()
 pose = mp.solutions.pose.Pose()
-name = "M8-21-2025-moving_hands_full"
+name = "M8-31-2025-batch_size=4-neurons=[128,64]-1"
 model = load_model(f"{name}/model.h5")
 with open(f"{name}/text.txt", "r") as f:
     class_names = f.read().splitlines()
@@ -134,7 +134,6 @@ def handle_message(msg):
 @socketio.on('dismessage')
 def handle_message(currenttext):
     global label
-    print(label,"<==")
     if label == "" and currenttext != "":
         emit("take", (currenttext, "ipad"), broadcast=True) 
     elif label != "":
