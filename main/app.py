@@ -8,8 +8,19 @@ import cv2, math
 
 hands = mp.solutions.hands.Hands()
 pose = mp.solutions.pose.Pose()
-name = "M8-31-2025-batch_size=4-neurons=[128,64]-1"
-model = load_model(f"{name}/model.h5")
+
+name = "M9-3-2025-tree100"
+
+from pytorch_tabnet.tab_model import TabNetClassifier
+
+# Create a new instance
+tabnet_loaded = TabNetClassifier()
+tabnet_loaded.load_model(f"{name}/tabnet_model.zip")
+
+# Now you can use tabnet_loaded to predict:
+# y_pred = tabnet_loaded.predict(X_test)
+
+# model = load_model(f"{name}/model.h5")
 with open(f"{name}/text.txt", "r") as f:
     class_names = f.read().splitlines()
 pose_take = [0,11,12,13,14,15,16]
