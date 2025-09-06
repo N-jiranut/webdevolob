@@ -1,4 +1,4 @@
-// const socket = io('http://10.207.14.216:5000');
+// const socket = io('http://10.207.14.79:5000');
 const socket = io('http://192.168.1.115:5000');
 
 const chatBox = document.getElementById("dischat");

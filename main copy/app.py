@@ -1,21 +1,16 @@
 from flask import Flask, render_template, Response
 from flask_socketio import SocketIO, send, emit
-from tensorflow.keras.models import load_model
 from PIL import ImageFont, ImageDraw, Image
+from matplotlib.pyplot import draw
+from tensorflow.keras.models import load_model
 import mediapipe as mp
 import numpy as np
 import pandas as pd
-import cv2, math
+import cv2, math, joblib, os
 
 hands = mp.solutions.hands.Hands()
 pose = mp.solutions.pose.Pose()
 pose_take = [0,11,12,13,14]
-
-name = "M9-3-2025-Uan"
-
-model = load_model(f"ML-model/{name}/model.h5")
-with open(f"ML-model/{name}/text.txt", "r") as f:
-    class_names = f.read().splitlines()
 
 frame_x = 720
 frame_y = 480
@@ -24,7 +19,7 @@ working=False
 Finish=True
 collectpic=False
 clientcsv=[]
-label=""
+label="ทดสอบ"
 npic=0
 
 app = Flask(__name__)
@@ -39,22 +34,23 @@ def generate_frames():
         row=[]
         LH=[]
         RH=[]
-        BO=[]
         
         ret, img = cap.read()
         img = cv2.resize(img, (frame_x, frame_y))
         img = cv2.flip(img, 1)
         img = cv2.cvtColor(img,cv2.COLOR_RGB2BGR)
+        
         hand_result = hands.process(img)
         pose_results = pose.process(frame)
+        
         if label !="":
             img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-            font = ImageFont.truetype("C:/Users/User/OneDrive/Documents/THSarabunNew.ttf", 90)
+            font = ImageFont.truetype("C:/Users/zxnna/Downloads/th-sarabun-new/THSarabunNew.ttf", 60)
             draw = ImageDraw.Draw(img_pil)
-            draw.text((310, 240), label, font=font, fill=(0, 0, 255))
+            draw.text((310, 240), label, font=font, fill=(0, 0, 25))
             img = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
         img = cv2.cvtColor(img,cv2.COLOR_RGB2BGR)
-        
+
         if hand_result.multi_hand_landmarks:
             for idx, hand_landmarks in enumerate(hand_result.multi_hand_landmarks):
                 arx, ary = [], []
@@ -75,6 +71,7 @@ def generate_frames():
 
                 cv2.rectangle(img, (lx,ly), (mx,my),(50,150,0), 2)
                 cv2.putText(img, str(handedness), (lx, ly), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 2, cv2.LINE_AA)
+        
         if pose_results.pose_landmarks:
             BO=[]
             landmarks = pose_results.pose_landmarks.landmark
@@ -83,6 +80,7 @@ def generate_frames():
                 if id in pose_take:
                     cv2.circle(frame ,(round(x*720),round(y*480)), 1, (0,0,255), 7)
                     BO.extend([x, y])     
+         
                 
         if working and Finish and len(clientcsv)<200:
             cv2.putText(img, f"Get: {npic}/200", (50, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 2, cv2.LINE_AA)
@@ -92,9 +90,7 @@ def generate_frames():
             row.extend(LH)
             if len(RH) <= 0:
                 RH = [0 for _ in range(42)]
-            if len(BO) <= 0:
-                BO = [0 for _ in range(10)]
-            row.extend(BO)
+            row.extend(RH)
             clientcsv.append(row)
         
         ret, buffer = cv2.imencode('.jpg', img)
@@ -118,9 +114,8 @@ def processs():
         for id, ob in enumerate(clientcsv):
             if id%con and len(forpredict)<(84*frame_get):
                 forpredict.extend(ob)
-        pred = model.predict(np.array([forpredict]).reshape(1, -1))
-        index = np.argmax(pred)
-        label = class_names[index]
+        df = pd.DataFrame([forpredict])
+        df.to_csv("data/main.csv", mode="a", index=False, header=False)
         working=False
         Finish=True
         socketio.emit("next")

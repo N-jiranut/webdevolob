@@ -1,11 +1,14 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
-const char* ssid     = "vivo_V25";
-const char* password = "02_jiranut";
-const char* svstart = "http://10.207.14.79:5000/start";
-const char* svcancel = "http://10.207.14.79:5000/cancel";
-const char* svsend = "http://10.207.14.79:5000/send";
+const char* ssid     = "PU_2G";
+const char* password = "0934964163";
+const char* svstart = "http://192.168.1.115:5000/start";
+const char* svcancel = "http://192.168.1.115:5000/cancel";
+const char* svsend = "http://192.168.1.115:5000/send";
+// const char* svstart = "http://10.207.14.79:5000/start";
+// const char* svcancel = "http://10.207.14.79:5000/cancel";
+// const char* svsend = "http://10.207.14.79:5000/send";
 unsigned long test;
 const int startbtn = 15;
 const int cancelbtn = 13;
