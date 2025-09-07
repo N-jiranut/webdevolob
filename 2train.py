@@ -29,21 +29,21 @@ from tensorflow.keras.callbacks import EarlyStopping
 
 early_stop = EarlyStopping(
     monitor='val_loss',
-    patience=15,
+    patience=10,
     restore_best_weights=True
 )
 
 model = Sequential([
-    Dense(64, activation='relu', input_shape=(X.shape[1],)),
+    Dense(128, activation='relu', input_shape=(X.shape[1],)),
     Dropout(0.3),
-    Dense(32, activation='relu'),
+    Dense(64, activation='relu'),
     Dropout(0.3),
     Dense(y_categorical.shape[1], activation='softmax')
 ])
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-history = model.fit(X_train, y_train, epochs=2000, batch_size=4, validation_data=(X_test, y_test), callbacks=[early_stop])
+history = model.fit(X_train, y_train, epochs=2000, batch_size=2, validation_data=(X_test, y_test), callbacks=[early_stop])
 # , callbacks=[early_stop]
 
 model.save(f"ML-model/{date}-{name}/model.h5")
