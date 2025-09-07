@@ -9,7 +9,7 @@ date="M9-3-2025"
 name="Uan"
 
 # Load your CSV
-df = pd.read_csv("data/main.csv")
+df = pd.read_csv("data/main.csv", encoding="utf-8")
 
 # Split features and labels
 X = df.iloc[:, :-1].values
@@ -43,7 +43,7 @@ model = Sequential([
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-history = model.fit(X_train, y_train, epochs=2000, batch_size=1, validation_data=(X_test, y_test), callbacks=[early_stop])
+history = model.fit(X_train, y_train, epochs=2000, batch_size=4, validation_data=(X_test, y_test), callbacks=[early_stop])
 # , callbacks=[early_stop]
 
 model.save(f"ML-model/{date}-{name}/model.h5")

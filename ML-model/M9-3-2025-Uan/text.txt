@@ -1,2 +1,2 @@
-lup
-rup
+dont
+dont_like

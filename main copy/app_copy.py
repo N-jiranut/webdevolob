@@ -26,7 +26,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 def generate_frames():
     global clientcsv, working, Finish, label, npic
@@ -41,7 +41,7 @@ def generate_frames():
         img = cv2.cvtColor(img,cv2.COLOR_RGB2BGR)
         
         hand_result = hands.process(img)
-        pose_results = pose.process(frame)
+        pose_results = pose.process(img)
         
         if label !="":
             img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
@@ -78,7 +78,7 @@ def generate_frames():
             for id,lm in enumerate(landmarks):
                 x, y = lm.x, lm.y
                 if id in pose_take:
-                    cv2.circle(frame ,(round(x*720),round(y*480)), 1, (0,0,255), 7)
+                    cv2.circle(img ,(round(x*720),round(y*480)), 1, (0,0,255), 7)
                     BO.extend([x, y])     
          
                 
@@ -91,13 +91,17 @@ def generate_frames():
             if len(RH) <= 0:
                 RH = [0 for _ in range(42)]
             row.extend(RH)
+            if len(BO) <= 0:
+                BO = [0 for _ in range(10)] 
+            row.extend(BO)
+            
             clientcsv.append(row)
         
         ret, buffer = cv2.imencode('.jpg', img)
         frame = buffer.tobytes()
         yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-def processs():
+def processs(): 
     global clientcsv, working, Finish, label, npic
     if not working and Finish and label == "":
         print("start")
@@ -112,7 +116,7 @@ def processs():
         maxarr=len(clientcsv)
         con = math.floor(maxarr/frame_get)
         for id, ob in enumerate(clientcsv):
-            if id%con and len(forpredict)<(84*frame_get):
+            if id%con and len(forpredict)<(94*frame_get):
                 forpredict.extend(ob)
         df = pd.DataFrame([forpredict])
         df.to_csv("data/main.csv", mode="a", index=False, header=False)
@@ -153,6 +157,7 @@ def newwork():
         
 @socketio.on('fordelete')
 def deletelabel():
+    print("test")
     global label
     label=""
     
