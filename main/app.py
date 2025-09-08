@@ -14,7 +14,7 @@ pose_take = [0,11,12,13,14]
 name = "M9-3-2025-Uan"
 
 model = load_model(f"ML-model/{name}/model.h5")
-with open(f"ML-model/{name}/text.txt", "r") as f:
+with open(f"ML-model/{name}/text.txt", "r", encoding="utf-8") as f:
     class_names = f.read().splitlines()
 
 frame_x = 720
@@ -39,22 +39,33 @@ def generate_frames():
         row=[]
         LH=[]
         RH=[]
-        BO=[]
+        RP=[.5,.8]
         
         ret, img = cap.read()
         img = cv2.resize(img, (frame_x, frame_y))
         img = cv2.flip(img, 1)
         img = cv2.cvtColor(img,cv2.COLOR_RGB2BGR)
+        
         hand_result = hands.process(img)
         pose_results = pose.process(img)
+        
         if label !="":
             img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-            font = ImageFont.truetype("C:/Users/User/OneDrive/Documents/THSarabunNew.ttf", 90)
+            font = ImageFont.truetype("C:/Users/User/OneDrive/Documents/THSarabunNew/THSarabunNew.ttf", 60)
             draw = ImageDraw.Draw(img_pil)
-            draw.text((310, 240), label, font=font, fill=(0, 0, 255))
+            draw.text((310, 240), label, font=font, fill=(0, 255, 0))
             img = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
         img = cv2.cvtColor(img,cv2.COLOR_RGB2BGR)
-        
+
+        if pose_results.pose_landmarks:
+            make=[]
+            for id,lm in enumerate(pose_results.pose_landmarks.landmark):
+                x, y = lm.x, lm.y
+                if id in pose_take:
+                    make.extend([x, y])
+            RP=[(make[0]+make[2])/2, (make[1]+make[3])/2]
+            cv2.circle(img ,(round(RP[0]*frame_x),round(RP[1]*frame_y)), 1, (0,0,255), 7)
+
         if hand_result.multi_hand_landmarks:
             for idx, hand_landmarks in enumerate(hand_result.multi_hand_landmarks):
                 arx, ary = [], []
@@ -63,10 +74,10 @@ def generate_frames():
                     x, y= lm.x, lm.y    
                     arx.append(x)
                     ary.append(y)
-                    if handedness == "Left" and len(LH)<42:
-                        LH.extend([x,y])
-                    if handedness == "Right" and len(RH)<42:
-                        RH.extend([x,y])
+                    if handedness == "Left" and len(LH)<21:
+                        LH.append((math.sqrt((lm.x - RP[0]) ** 2 + (lm.y - RP[1]) ** 2)))
+                    if handedness == "Right" and len(RH)<21:
+                        RH.append((math.sqrt((lm.x - RP[0]) ** 2 + (lm.y - RP[1]) ** 2)))
 
                 mx = round(max(arx)*frame_x)
                 lx = round(min(arx)*frame_x)
@@ -75,27 +86,17 @@ def generate_frames():
 
                 cv2.rectangle(img, (lx,ly), (mx,my),(50,150,0), 2)
                 cv2.putText(img, str(handedness), (lx, ly), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 2, cv2.LINE_AA)
-        if pose_results.pose_landmarks:
-            BO=[]
-            landmarks = pose_results.pose_landmarks.landmark
-            for id,lm in enumerate(landmarks):
-                x, y = lm.x, lm.y
-                if id in pose_take:
-                    cv2.circle(img ,(round(x*720),round(y*480)), 1, (0,0,255), 7)
-                    BO.extend([x, y])     
                 
         if working and Finish and len(clientcsv)<200:
             cv2.putText(img, f"Get: {npic}/200", (50, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 2, cv2.LINE_AA)
             npic+=1
             if len(LH) <= 0:
-                LH = [0 for _ in range(42)]
+                LH = [0 for _ in range(21)]
             row.extend(LH)
             if len(RH) <= 0:
-                RH = [0 for _ in range(42)]
+                RH = [0 for _ in range(21)]
             row.extend(RH)
-            if len(BO) <= 0:
-                BO = [0 for _ in range(10)]
-            row.extend(BO)
+            
             clientcsv.append(row)
         
         ret, buffer = cv2.imencode('.jpg', img)
@@ -117,7 +118,7 @@ def processs():
         maxarr=len(clientcsv)
         con = math.floor(maxarr/frame_get)
         for id, ob in enumerate(clientcsv):
-            if id%con and len(forpredict)<(94*frame_get):
+            if id%con==0 and len(forpredict)<frame_get*42:
                 forpredict.extend(ob)
         pred = model.predict(np.array([forpredict]).reshape(1, -1))
         index = np.argmax(pred)
