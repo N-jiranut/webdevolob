@@ -1,5 +1,10 @@
-อณุญาติ
-ห้าม
-ไม่ชอบ
-ยาก
-ขอบคุณ
+cute
+eat
+faint
+fine
+good_look
+no
+rice
+sorry
+thanks
+yes

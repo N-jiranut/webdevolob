@@ -1,17 +1,22 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
-const char* ssid     = "PU_2G";
-const char* password = "0934964163";
-const char* svstart = "http://192.168.1.115:5000/start";
-const char* svcancel = "http://192.168.1.115:5000/cancel";
-const char* svsend = "http://192.168.1.115:5000/send";
-// const char* svstart = "http://10.207.14.79:5000/start";
-// const char* svcancel = "http://10.207.14.79:5000/cancel";
-// const char* svsend = "http://10.207.14.79:5000/send";
+// const char* ssid     = "PU_2G";
+// const char* password = "0934964163";
+const char* ssid     = "S23 FE ของ Patinya";
+const char* password = "12345678";
+// const char* svstart = "http://192.168.1.121:5000/start";
+// const char* svcancel = "http://192.168.1.121:5000/cancel";
+// const char* svsend = "http://192.168.1.121:5000/send";
+// const char* svstart = "http://172.26.188.79:5000/start";
+// const char* svcancel = "http://172.26.188.79:5000/cancel";
+// const char* svsend = "http://172.26.188.79:5000/send";
+const char* svstart = "http://10.179.41.79:5000/start";
+const char* svcancel = "http://10.179.41.79:5000/cancel";
+const char* svsend = "http://10.179.41.79:5000/send";
 unsigned long test;
-const int startbtn = 15;
-const int cancelbtn = 13;
+const int startbtn = 13;
+const int cancelbtn = 15;
 const int sendbtn = 12;
 int startc = HIGH;
 int cancelc = HIGH;
@@ -50,18 +55,22 @@ void loop() {
   int start = digitalRead(startbtn);
   int cancel = digitalRead(cancelbtn);
   int send = digitalRead(sendbtn);
+  // Serial.println(start);
+  // Serial.println(cancel);
   // Serial.println(send);
-  // Serial.println(sendc);
+  // Serial.println("===");
   if (WiFi.status() == WL_CONNECTED) {
     if (start == HIGH && startc == LOW){
       http.begin(client, svstart);
       int httpResponseCode = http.POST("postData");
       Serial.println(httpResponseCode);
+      Serial.println("ok");
       http.end();
     }
     if (cancel == HIGH && cancelc == LOW){
       http.begin(client, svcancel);
       int httpResponseCode = http.POST("postData");
+      Serial.println("ok");
       Serial.println(httpResponseCode);
       http.end();
     }
@@ -69,12 +78,13 @@ void loop() {
       http.begin(client, svsend);
       int httpResponseCode = http.POST("postData");
       Serial.println(httpResponseCode);
+      Serial.println("ok");
       http.end();
     }
   }
-  Serial.println(send);
+  // Serial.println(cancelc, sendc);
   startc = start;
   cancelc = cancel;
   sendc = send;
-  delay(125); // ส่งทุก 100ms 
+  delay(10); // ส่งทุก 100ms 
 }

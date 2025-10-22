@@ -51,20 +51,20 @@ def generate_frames():
         
         if label !="":
             img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-            font = ImageFont.truetype("C:/Users/User/OneDrive/Documents/THSarabunNew/THSarabunNew.ttf", 60)
+            font = ImageFont.truetype("C:/Users/Thinkpad/Downloads/THSarabunNew (1)/THSarabunNew.ttf", 60)
             draw = ImageDraw.Draw(img_pil)
             draw.text((310, 240), label, font=font, fill=(0, 255, 0))
             img = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
         img = cv2.cvtColor(img,cv2.COLOR_RGB2BGR)
 
-        if pose_results.pose_landmarks:
-            make=[]
-            for id,lm in enumerate(pose_results.pose_landmarks.landmark):
-                x, y = lm.x, lm.y
-                if id in pose_take:
-                    make.extend([x, y])
-            RP=[(make[0]+make[2])/2, (make[1]+make[3])/2]
-            cv2.circle(img ,(round(RP[0]*frame_x),round(RP[1]*frame_y)), 1, (0,0,255), 7)
+        # if pose_results.pose_landmarks:
+        #     make=[]
+        #     for id,lm in enumerate(pose_results.pose_landmarks.landmark):
+        #         x, y = lm.x, lm.y
+        #         if id in pose_take:
+        #             make.extend([x, y])
+        #     RP=[(make[0]+make[2])/2, (make[1]+make[3])/2]
+        #     cv2.circle(img ,(round(RP[0]*frame_x),round(RP[1]*frame_y)), 1, (0,0,255), 7)
 
         if hand_result.multi_hand_landmarks:
             for idx, hand_landmarks in enumerate(hand_result.multi_hand_landmarks):
@@ -156,7 +156,8 @@ def handle_message(currenttext):
 
 @socketio.on('work')
 def newwork():
-    pass
+    print("WORK")
+    processs()
         
 @socketio.on('fordelete')
 def deletelabel():

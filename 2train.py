@@ -20,44 +20,46 @@ le = LabelEncoder()
 y_encoded = le.fit_transform(y)
 y_categorical = to_categorical(y_encoded)
 
+print("Classes:", le.classes_)
+
 # Split the data
-X_train, X_test, y_train, y_test = train_test_split(X, y_categorical, test_size=0.2, random_state=42)
+# X_train, X_test, y_train, y_test = train_test_split(X, y_categorical, test_size=0.2, random_state=42)
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.callbacks import EarlyStopping
+# from tensorflow.keras.models import Sequential
+# from tensorflow.keras.layers import Dense, Dropout
+# from tensorflow.keras.callbacks import EarlyStopping
 
-early_stop = EarlyStopping(
-    monitor='val_loss',
-    patience=10,
-    restore_best_weights=True
-)
+# early_stop = EarlyStopping(
+#     monitor='val_loss',
+#     patience=20,
+#     restore_best_weights=True
+# )
 
-model = Sequential([
-    Dense(128, activation='relu', input_shape=(X.shape[1],)),
-    Dropout(0.3),
-    Dense(64, activation='relu'),
-    Dropout(0.3),
-    Dense(y_categorical.shape[1], activation='softmax')
-])
+# model = Sequential([
+#     Dense(128, activation='relu', input_shape=(X.shape[1],)),
+#     Dropout(0.3),
+#     Dense(64, activation='relu'),
+#     Dropout(0.3),
+#     Dense(y_categorical.shape[1], activation='softmax')
+# ])
 
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+# model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-history = model.fit(X_train, y_train, epochs=2000, batch_size=2, validation_data=(X_test, y_test), callbacks=[early_stop])
-# , callbacks=[early_stop]
+# history = model.fit(X_train, y_train, epochs=2000, batch_size=4, validation_data=(X_test, y_test), callbacks=[early_stop])
+# # , callbacks=[early_stop]
 
-model.save(f"ML-model/{date}-{name}/model.h5")
+# model.save(f"ML-model/{date}-{name}/model.h5")
 
-with open(f"ML-model/{date}-{name}/text.txt", "w") as f:
-    for label in le.classes_:
-        f.write(str(label) + "\n")
+# with open(f"ML-model/{date}-{name}/text.txt", "w") as f:
+#     for label in le.classes_:
+#         f.write(str(label) + "\n")
 
-plt.plot(history.history['loss'], label='Training Loss')
-plt.plot(history.history['val_loss'], label='Validation Loss')
-plt.title("Loss Over Epochs")
-plt.xlabel("Epoch")
-plt.ylabel("Loss")
-plt.legend()
-plt.grid(True)
-plt.savefig(f"ML-model/{date}-{name}/keras_loss_plot.png")
-plt.show()
+# plt.plot(history.history['loss'], label='Training Loss')
+# plt.plot(history.history['val_loss'], label='Validation Loss')
+# plt.title("Loss Over Epochs")
+# plt.xlabel("Epoch")
+# plt.ylabel("Loss")
+# plt.legend()
+# plt.grid(True)
+# plt.savefig(f"ML-model/{date}-{name}/keras_loss_plot.png")
+# plt.show()
