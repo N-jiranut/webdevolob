@@ -1,4 +1,4 @@
-const socket = io('http://10.66.68.159:5000');
+const socket = io('http://127.0.0.1:5000');
 // const socket = io('http://10.207.79.216:5000');
 // const socket = io('http://192.168.1.115:5000');
 

@@ -2,7 +2,7 @@ const sendBtn = document.getElementById("sendBtn");
 const chatBox = document.getElementById("webchat");
 const input = document.getElementById("input-text");
 // const socket = io('http://10.207.14.216:5000');
-const socket = io('http://192.168.1.115:5000');
+const socket = io('http://127.0.0.1:5000');
 
 function sendMessage(){
     const text = input.value
